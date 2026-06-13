@@ -19,6 +19,7 @@ task run_phase(uvm_phase phase);
 forever begin
   master_txn txn;
 @(posedge vif.clk);
+#1;
 if(vif.req && vif.grant) begin
 txn = master_txn::type_id::create("txn");
 txn.addr	= vif.addr;
@@ -27,8 +28,10 @@ txn.wrdata	= vif.wrdata;
 
 if(!vif.wrenable) begin
   @(posedge vif.clk);
+  #1;
   txn.rdata = vif.rdata;
 end
+`uvm_info("MASTER_MON", $sformatf("Observed txn: %s", txn.convert2string()), UVM_MEDIUM)
 ap.write(txn);
 end
 end
