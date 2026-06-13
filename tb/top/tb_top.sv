@@ -118,7 +118,7 @@ initial begin
     uvm_config_db #(virtual ram_if)::set(
       null, "uvm_test_top.e.ram_mon", "ram_vif", r_if);
 
-    run_test("write_read_test");
+    run_test("directed_test");
   end
 
 endmodule

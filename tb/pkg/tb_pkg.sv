@@ -13,10 +13,15 @@ package tb_pkg ;
   `include "../master_agent/master_agent.sv"
   `include "../env/virtual_sequencer.sv"
   `include "../sequence/virtual_sequence.sv"
+  `include "../sequence/directed_write_seq.sv"
+  `include "../sequence/directed_read_seq.sv"
   `include "../sequence/virtual_write_sequence.sv"
   `include "../sequence/virtual_read_sequence.sv"
+  `include "../sequence/virtual_directed_read_seq.sv"
+  `include "../sequence/virtual_directed_write_seq.sv"
   `include "../env/env.sv"
   `include "../test/base_test.sv"
   `include "../test/write_read_test.sv"
+  `include "../test/directed_test.sv"
 
 endpackage

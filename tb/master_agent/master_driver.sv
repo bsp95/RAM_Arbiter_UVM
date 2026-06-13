@@ -43,7 +43,7 @@ vif.wrdata	<= txn.wrdata;
 @(posedge vif.clk);
 if(!txn.wrenable)
 txn.rdata = vif.rdata;
-
+`uvm_info("MASTER_DRV", $sformatf("Driving txn: %s", txn.convert2string()), UVM_MEDIUM)
 #1;
 vif.req		<= 1'b0;
 vif.addr	<= '0;
