@@ -31,24 +31,28 @@ end
 endtask
 
 task drive_txn(master_txn txn);
- @(posedge vif.clk);
-#1;
-vif.req <= 1'b1;
-@(posedge vif.clk iff vif.grant == 1'b1);
-#1;
-vif.addr	<= txn.addr;
-vif.wrenable	<= txn.wrenable;
-vif.wrdata	<= txn.wrdata;
+  @(posedge vif.clk);
+  #1;
+  vif.req      <= 1'b1;
+  vif.addr     <= txn.addr;
+  vif.wrenable <= txn.wrenable;
+  vif.wrdata   <= txn.wrdata;
 
-@(posedge vif.clk);
-if(!txn.wrenable)
-txn.rdata = vif.rdata;
+  `uvm_info("MASTER_DRV", $sformatf("Driving txn: %s", txn.convert2string()), UVM_MEDIUM)
 
-#1;
-vif.req		<= 1'b0;
-vif.addr	<= '0;
-vif.wrdata	<= '0;
-vif.wrenable 	<= 1'b0;
+  @(posedge vif.clk iff vif.grant == 1'b1);
+
+  if(!txn.wrenable) begin
+    @(posedge vif.clk);
+    #1;
+    txn.rdata = vif.rdata;
+  end
+
+  #1;
+  vif.req      <= 1'b0;
+  vif.addr     <= '0;
+  vif.wrdata   <= '0;
+  vif.wrenable <= 1'b0;
 endtask
 
 endclass
