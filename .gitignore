@@ -1,0 +1,11 @@
+work/
+transcript
+*.wlf
+*.log
+*.jou
+*.pb
+*.ucdb
+*.vstf
+modelsim.ini
+vsim.wlf
+covhtmlreport/
