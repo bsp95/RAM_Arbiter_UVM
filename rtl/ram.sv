@@ -1,8 +1,6 @@
 import config_pkg::*;
-module ram_mem #(
-    parameter ADDR_WIDTH = config_pkg::ADDR_WIDTH,
-    parameter DATA_WIDTH = config_pkg::DATA_WIDTH
-)(
+module ram_mem
+(
     input  logic                  clk,
     input  logic                  rst,
     input  logic                  wrenable,
@@ -11,8 +9,7 @@ module ram_mem #(
     output logic [DATA_WIDTH-1:0] rdata
 );
 
-logic [DATA_WIDTH-1:0] mem [0:config_pkg::DEPTH-1];
-
+logic [DATA_WIDTH-1:0] mem [0:DEPTH-1];
 always_ff @(posedge clk) begin
 
     if (rst)

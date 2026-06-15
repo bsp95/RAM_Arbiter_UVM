@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ns/1ns
 `include "uvm_macros.svh"
 import uvm_pkg::*;
 import tb_pkg::*;
@@ -26,6 +26,8 @@ module tb_top;
   logic [DATA_WIDTH-1:0]  ram_wrdata;
   logic                   ram_wrenable;
   logic [DATA_WIDTH-1:0]  ram_rdata;
+  logic [NUM_MASTERS-1:0] grant_d;
+logic [DATA_WIDTH-1:0] rdata_reg [NUM_MASTERS];
 
   // ── Intermediate Arrays for MUX ──────────────
   logic [ADDR_WIDTH-1:0]  addr_mux    [NUM_MASTERS];
@@ -54,7 +56,19 @@ module tb_top;
     end
   endgenerate
 
-  // ── MUX: tap interface signals into logic arrays
+always_ff @(posedge clk or posedge rst) begin
+  if (rst)
+    grant_d <= '0;
+  else
+    grant_d <= grant;
+end
+// use delayed grant for rdata routing
+generate
+  for(genvar i = 0; i < NUM_MASTERS; i++) begin
+    assign m_if[i].rdata = grant_d[i] ? ram_rdata : '0; 
+    assign m_if[i].grant = grant[i];
+  end
+endgenerate  // ── MUX: tap interface signals into logic arrays
   generate
     for(genvar i = 0; i < NUM_MASTERS; i++) begin : gen_mux
       assign addr_mux[i]     = grant[i] ? m_if[i].addr     : '0;
@@ -75,14 +89,7 @@ module tb_top;
     end
   end
 
-  // ── DEMUX: rdata and grant back to masters ────
-  generate
-    for(genvar i = 0; i < NUM_MASTERS; i++) begin
-      assign m_if[i].rdata = grant[i] ? ram_rdata : '0;
-      assign m_if[i].grant = grant[i];
-    end
-  endgenerate
-
+  
   // ── DUT Instantiations ────────────────────────
   rr_arbiter u_arbiter (
     .clk   (clk),
@@ -119,6 +126,7 @@ initial begin
       null, "uvm_test_top.e.ram_mon", "ram_vif", r_if);
 
     run_test("directed_test");
+  //  run_test("write_read_test");
   end
 
 endmodule
