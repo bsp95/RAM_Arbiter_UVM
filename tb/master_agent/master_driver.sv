@@ -40,11 +40,8 @@ vif.wrenable	<= txn.wrenable;
 vif.wrdata	<= txn.wrdata;
 @(posedge vif.clk iff vif.grant == 1'b1);
 
-@(posedge vif.clk);
-if(!txn.wrenable)
-begin txn.rdata = vif.rdata;
+//@(posedge vif.clk);
 `uvm_info("MASTER_DRV", $sformatf("Driving txn: %s", txn.convert2string()), UVM_MEDIUM)
-end
 #1;
 
 vif.req		<= 1'b0;

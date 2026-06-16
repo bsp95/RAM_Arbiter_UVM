@@ -10,6 +10,15 @@ module ram_mem
 );
 
 logic [DATA_WIDTH-1:0] mem [0:DEPTH-1];
+
+//Preload memory at time 0
+
+initial begin
+$readmemh("../rtl/mem_init.hex",mem);
+$display("RAM: Memory preloaded from mem_init.hex");
+  end
+
+
 always_ff @(posedge clk) begin
 
     if (rst)

@@ -6,7 +6,7 @@ import config_pkg::*;
 
 module tb_top;
 
-  // ── Clock and Reset ──────────────────────────
+// clock and reset signals  
   logic clk;
   logic rst;
 
@@ -56,6 +56,7 @@ logic [DATA_WIDTH-1:0] rdata_reg [NUM_MASTERS];
     end
   endgenerate
 
+ // Delayed grant for synchronization
 always_ff @(posedge clk or posedge rst) begin
   if (rst)
     grant_d <= '0;
@@ -68,7 +69,8 @@ generate
     assign m_if[i].rdata = grant_d[i] ? ram_rdata : '0; 
     assign m_if[i].grant = grant[i];
   end
-endgenerate  // ── MUX: tap interface signals into logic arrays
+endgenerate
+  // ── MUX: tap interface signals into logic arrays
   generate
     for(genvar i = 0; i < NUM_MASTERS; i++) begin : gen_mux
       assign addr_mux[i]     = grant[i] ? m_if[i].addr     : '0;
@@ -124,8 +126,8 @@ endgenerate
 initial begin
     uvm_config_db #(virtual ram_if)::set(
       null, "uvm_test_top.e.ram_mon", "ram_vif", r_if);
-
-    run_test("directed_test");
+  run_test("preloaded_read_test");
+ //   run_test("directed_test");
   //  run_test("write_read_test");
   end
 

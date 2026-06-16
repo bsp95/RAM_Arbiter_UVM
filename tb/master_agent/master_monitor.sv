@@ -29,6 +29,9 @@ if(!vif.wrenable) begin
   @(posedge vif.clk);
   txn.rdata = vif.rdata;
 end
+`uvm_info("MON",
+  $sformatf("MONITOR txn=%s", txn.convert2string()),
+  UVM_MEDIUM)
 ap.write(txn);
 end
 end

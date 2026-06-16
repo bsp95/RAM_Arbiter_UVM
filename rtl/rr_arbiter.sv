@@ -37,7 +37,7 @@ end
 end
 end
 
-always_ff @(posedge clk or negedge rst) begin
+always_ff @(posedge clk) begin
 if(rst)
 last_grant <= 0;
 else if(grant_found) begin 
